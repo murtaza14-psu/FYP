@@ -26,7 +26,7 @@ describe('HowItWorksPage', () => {
     renderPage()
     const terms = screen.getAllByRole('term').map((t) => t.textContent)
     expect(terms).toEqual(
-      expect.arrayContaining(['Task type', 'Number of GPUs', 'Duration', 'GPU utilisation', 'Region']),
+      expect.arrayContaining(['Number of GPUs', 'SM utilisation', 'Memory utilisation', 'Operating time', 'Region']),
     )
   })
 

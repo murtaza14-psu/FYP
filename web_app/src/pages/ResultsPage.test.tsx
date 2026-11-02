@@ -32,7 +32,7 @@ describe('ResultsPage', () => {
 
   it('shows every results section when an analysis exists', () => {
     renderPage(result)
-    expect(screen.getByRole('heading', { name: /predicted heat load/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^annual heat$/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /cooling comparison/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^ranking$/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /assumptions and equations/i })).toBeInTheDocument()

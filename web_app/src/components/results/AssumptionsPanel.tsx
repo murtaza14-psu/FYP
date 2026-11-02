@@ -2,7 +2,8 @@ import { useId, useState } from 'react'
 import { COOLING_TECHNIQUES } from '../../data/coolingTechniques'
 
 const FORMULAS = [
-  'Heat energy (kWh) = heat load (MW) × 1,000 × duration (hours)',
+  'Heat load (MW) = GPUs × power per GPU (W) ÷ 1,000,000, where power per GPU is the average of five trained models.',
+  'Annual heat energy (kWh) = heat load (MW) × 1,000 × hours per day × days per year',
   'Electricity (kWh) = heat energy × electricity factor',
   'Water (L) = heat energy × water factor',
   'Low and high values use the lower and upper bounds of the predicted heat load.',
@@ -41,8 +42,8 @@ export default function AssumptionsPanel() {
 
       <div id={panelId} role="region" aria-label="Assumptions and equations" hidden={!open} className="space-y-6 px-6 pb-6">
         <p className="rounded-lg bg-amber-50 p-3 text-sm font-medium text-amber-900">
-          All figures here are placeholders. Heat comes from a fixed mock value, and the factors below will be replaced by
-          physics-based models for Ashburn, Virginia.
+          The heat figures come from the trained ML ensemble. The cooling factors below are placeholders that will be
+          replaced by physics-based models for Ashburn, Virginia.
         </p>
 
         <div>

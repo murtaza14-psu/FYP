@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { COOLING_TECHNIQUES } from './coolingTechniques'
 import { ASHBURN } from './regions'
-import { TASK_TYPES } from './taskTypes'
 
 describe('cooling techniques', () => {
   it('defines exactly three techniques with unique ids', () => {
@@ -29,11 +28,5 @@ describe('region', () => {
   it('is Ashburn, Virginia', () => {
     expect(ASHBURN.id).toBe('ashburn-va')
     expect(ASHBURN.name).toBe('Ashburn, Virginia, USA')
-  })
-})
-
-describe('task types', () => {
-  it('offers training, fine-tuning and inference', () => {
-    expect(TASK_TYPES.map((t) => t.id)).toEqual(['training', 'fine-tuning', 'inference'])
   })
 })

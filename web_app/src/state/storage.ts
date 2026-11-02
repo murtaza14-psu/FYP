@@ -11,6 +11,7 @@ export function isAnalysisResult(value: unknown): value is AnalysisResult {
   return (
     isObject(value) &&
     isObject(value.input) &&
+    typeof value.input.smUtilPercent === 'number' &&
     isObject(value.region) &&
     isObject(value.prediction) &&
     isObject(value.heatEnergyKWh) &&

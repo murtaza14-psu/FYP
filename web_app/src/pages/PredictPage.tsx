@@ -5,12 +5,12 @@ import Container from '../components/ui/Container'
 import PageHeader from '../components/ui/PageHeader'
 import { usePageTitle } from '../lib/usePageTitle'
 import { runAnalysis } from '../services/analysis'
-import { createMockHeatPredictor } from '../services/heatPrediction'
+import { createHttpHeatPredictor, HeatPredictionError } from '../services/heatPrediction'
 import { useAnalysis } from '../state/analysisContext'
 import type { PredictionInput } from '../types/analysis'
 
-// A short delay stands in for the real model's response time so the pending state is visible.
-const predictor = createMockHeatPredictor(600)
+// Calls the local ML service (python ml_module/api.py).
+const predictor = createHttpHeatPredictor()
 
 export default function PredictPage() {
   usePageTitle('Predict')
@@ -25,9 +25,13 @@ export default function PredictPage() {
     try {
       setResult(await runAnalysis(values, { predictor }))
       navigate('/results')
-    } catch {
+    } catch (error) {
       setPending(false)
-      setFailure('Something went wrong while running the analysis. Please try again.')
+      setFailure(
+        error instanceof HeatPredictionError
+          ? error.message
+          : 'Something went wrong while running the analysis. Please try again.',
+      )
     }
   }
 
@@ -36,7 +40,7 @@ export default function PredictPage() {
       <PageHeader
         eyebrow="Step 1 of 2"
         title="Run a prediction"
-        intro="Describe your GPU workload. We will predict its heat and compare cooling options."
+        intro="Describe your data centre's GPU fleet. We will predict the heat it gives off in a year and compare cooling options."
       />
       <Container className="grid gap-8 py-12 lg:grid-cols-[1fr_20rem]">
         <section className="rounded-2xl border border-ink-200 bg-white p-6 shadow-sm sm:p-8">
@@ -52,16 +56,16 @@ export default function PredictPage() {
           <div className="rounded-2xl border border-ink-200 bg-white p-5">
             <h2 className="font-display text-base font-semibold">What happens next</h2>
             <ol className="mt-3 list-decimal space-y-2 pl-5">
-              <li>The heat your GPUs produce is predicted.</li>
+              <li>Five trained models estimate each GPU's power, and from it your annual heat.</li>
               <li>Water and electricity use is estimated for three cooling techniques.</li>
               <li>The options are ranked so you can pick the best fit.</li>
             </ol>
           </div>
           <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-900">
-            <h2 className="font-display text-base font-semibold text-amber-900">Prototype notice</h2>
+            <h2 className="font-display text-base font-semibold text-amber-900">Before you start</h2>
             <p className="mt-2">
-              The heat prediction is currently a fixed placeholder value, so results will not change with your inputs
-              yet.
+              Heat comes from the local prediction service: run <code>python ml_module/api.py</code> first. It counts
+              GPU heat only (V100-trained). The cooling figures are still placeholders.
             </p>
           </div>
         </aside>

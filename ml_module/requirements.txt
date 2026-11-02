@@ -1,0 +1,9 @@
+# Pinned to the versions the results were produced with (Python 3.13).
+# For stricter supply-chain control, generate hashes with `pip-compile --generate-hashes`
+# and install with `pip install --require-hashes -r requirements.txt`.
+numpy==2.2.4
+scipy==1.15.2
+pandas==2.2.3
+scikit-learn==1.7.2
+joblib==1.5.2
+matplotlib==3.10.1

@@ -5,10 +5,11 @@ import type { PredictionInput } from '../types/analysis'
 import { runAnalysis } from './analysis'
 
 const input: PredictionInput = {
-  taskType: 'inference',
   gpuCount: 64,
-  durationHours: 10,
-  utilizationPercent: 60,
+  smUtilPercent: 60,
+  memUtilPercent: 30,
+  hoursPerDay: 10,
+  daysPerYear: 1,
 }
 
 describe('runAnalysis', () => {

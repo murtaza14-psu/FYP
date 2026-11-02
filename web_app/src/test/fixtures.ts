@@ -2,10 +2,11 @@ import { runAnalysis } from '../services/analysis'
 import type { AnalysisResult, PredictionInput } from '../types/analysis'
 
 export const sampleInput: PredictionInput = {
-  taskType: 'training',
   gpuCount: 64,
-  durationHours: 24,
-  utilizationPercent: 80,
+  smUtilPercent: 60,
+  memUtilPercent: 30,
+  hoursPerDay: 24,
+  daysPerYear: 365,
 }
 
 export function makeResult(input: PredictionInput = sampleInput): Promise<AnalysisResult> {

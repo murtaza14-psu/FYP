@@ -30,7 +30,7 @@ export default function ResultsPage() {
         ) : (
           <div className="mx-auto max-w-xl rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center">
             <p className="font-display text-2xl font-semibold text-ink-900">No results yet</p>
-            <p className="mt-2 text-ink-600">Describe a GPU workload to see its heat load and cooling comparison.</p>
+            <p className="mt-2 text-ink-600">Describe your GPU fleet to see its annual heat and cooling comparison.</p>
             <div className="mt-6">
               <LinkButton to="/predict" variant="outline">
                 Run a prediction

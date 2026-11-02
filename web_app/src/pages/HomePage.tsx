@@ -7,7 +7,7 @@ import { usePageTitle } from '../lib/usePageTitle'
 const MODULES = [
   {
     title: 'Predict heat',
-    body: 'Enter your task type, number of GPUs, duration and utilisation. A machine-learning model trained on the MIT SuperCloud dataset predicts how much heat the job will generate.',
+    body: 'Enter your number of GPUs, their utilisation and how long they run. Machine-learning models trained on the MIT SuperCloud dataset predict how much heat your fleet gives off in a year.',
   },
   {
     title: 'Model cooling',

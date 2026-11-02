@@ -1,26 +1,34 @@
-export type TaskType = 'training' | 'fine-tuning' | 'inference'
-
+/** What the operator knows about the data centre's GPU fleet. */
 export interface PredictionInput {
-  taskType: TaskType
   gpuCount: number
-  durationHours: number
-  /** Expected average GPU utilisation, 1–100. */
-  utilizationPercent: number
+  /** Average SM (compute) utilisation across the GPUs, 0–100. */
+  smUtilPercent: number
+  /** Average memory utilisation across the GPUs, 0–100. */
+  memUtilPercent: number
+  /** Hours per day the GPUs are in use, greater than 0 and at most 24. */
+  hoursPerDay: number
+  /** Days per year they are in use, 1–366. */
+  daysPerYear: number
 }
 
 /** Raw form values before validation. Everything is a string, as typed by the user. */
 export interface RawPredictionInput {
-  taskType: string
   gpuCount: string
-  durationHours: string
-  utilizationPercent: string
+  smUtilPercent: string
+  memUtilPercent: string
+  hoursPerDay: string
+  daysPerYear: string
 }
 
 export interface HeatPrediction {
-  /** Predicted heat load in megawatts. */
+  /** Average heat load while the GPUs are running, in megawatts. */
   valueMW: number
   lowMW: number
   highMW: number
+  /** Expected average power of one GPU in watts (absent for mock predictions). */
+  perGpuW?: number
+  /** Caveats from the prediction service, shown to the user. */
+  warnings?: string[]
   /** True while the value is hard-coded rather than produced by the ML model. */
   isMock: boolean
 }

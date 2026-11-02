@@ -1,0 +1,6 @@
+# Extra packages for api.py (on top of requirements.txt). Versions the API was tested with.
+fastapi==0.162.0
+uvicorn==0.54.0
+starlette==1.10.0
+pydantic==2.12.5
+httpx==0.28.1   # only for the API tests (fastapi.testclient)

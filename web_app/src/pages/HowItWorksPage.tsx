@@ -6,11 +6,11 @@ import { usePageTitle } from '../lib/usePageTitle'
 const STEPS = [
   {
     title: 'Describe your workload',
-    body: 'Tell us the type of task, how many GPUs you will use, for how long, and how busy they will be.',
+    body: 'Tell us how many GPUs you run, how busy their compute and memory are, and how many hours a day and days a year they are in use.',
   },
   {
     title: 'Predict the heat',
-    body: 'A machine-learning model estimates the heat load your GPUs will generate, as a value and a range.',
+    body: 'Five machine-learning models estimate the power of each GPU, and from it the heat your fleet gives off in a year, as a value and a range.',
   },
   {
     title: 'Estimate cooling resources',
@@ -24,20 +24,20 @@ const STEPS = [
 
 const INPUTS = [
   {
-    term: 'Task type',
-    detail: 'Training, fine-tuning or inference. Each stresses GPUs differently and so produces a different heat profile.',
-  },
-  {
     term: 'Number of GPUs',
-    detail: 'How many GPUs run the job in parallel, from 1 to 100,000.',
+    detail: 'How many GPUs are in the fleet, from 1 to 100,000.',
   },
   {
-    term: 'Duration',
-    detail: 'How long the job runs, in hours (up to one year). Longer jobs mean more total heat to remove.',
+    term: 'SM utilisation',
+    detail: 'The average share of GPU compute in use, from 0% to 100%. Busy GPUs draw more power and produce more heat.',
   },
   {
-    term: 'GPU utilisation',
-    detail: 'The average share of GPU capacity you expect to use, from 1% to 100%. Busy GPUs produce more heat.',
+    term: 'Memory utilisation',
+    detail: 'The average share of GPU memory bandwidth in use, from 0% to 100%.',
+  },
+  {
+    term: 'Operating time',
+    detail: 'Hours per day and days per year the GPUs are in use. More running time means more total heat to remove.',
   },
   {
     term: 'Region',

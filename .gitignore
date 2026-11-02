@@ -29,3 +29,8 @@ test-results
 playwright-report
 blob-report
 playwright/.cache
+
+# ML outputs (derived from the licensed dataset) and caches
+ml_module/artifacts/
+__pycache__/
+*.joblib

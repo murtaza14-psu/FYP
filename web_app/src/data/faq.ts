@@ -7,12 +7,12 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'What does this tool do?',
     answer:
-      'You describe a GPU workload (task type, number of GPUs, duration and utilisation). The tool predicts the heat it will generate, estimates the water and electricity that air, direct-to-chip and immersion cooling would use to remove that heat, and ranks the options by what matters most to you.',
+      'You describe a GPU fleet (number of GPUs, SM and memory utilisation, hours per day and days per year). The tool predicts the heat it gives off in a year, estimates the water and electricity that air, direct-to-chip and immersion cooling would use to remove that heat, and ranks the options by what matters most to you.',
   },
   {
     question: 'Where does the heat prediction come from?',
     answer:
-      'In this prototype the heat load is a fixed placeholder value (1.5 MW). The final system will use a machine-learning model trained on the MIT SuperCloud dataset, so the prediction will respond to your inputs.',
+      'Five machine-learning models (ridge regression, random forest, gradient boosting, support vector regression and a neural network) trained on the MIT SuperCloud dataset each estimate the power of one GPU from its utilisation. Their average, times your GPU count and running time, gives the annual heat. The models need the local prediction service (python ml_module/api.py) to be running.',
   },
   {
     question: 'Why is only Ashburn, Virginia available?',
@@ -37,7 +37,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Are the results accurate?',
     answer:
-      'No. This is a prototype: the heat prediction and cooling figures are placeholders that show how the final tool will look and behave. Do not use them for engineering or purchasing decisions.',
+      'The heat prediction was tested on GPU users the models had never seen (R² about 0.92, average error about 8 W per GPU) but it covers GPU power only and was trained on V100 data. The cooling figures are still placeholders, so do not use them for engineering or purchasing decisions.',
   },
   {
     question: 'Do I need an account, and is my data stored?',

@@ -6,7 +6,7 @@ import { useAnalysis } from './analysisContext'
 import AnalysisProvider from './AnalysisProvider'
 import { STORAGE_KEY } from './storage'
 
-const INPUT = { taskType: 'training', gpuCount: 8, durationHours: 2, utilizationPercent: 70 } as const
+const INPUT = { gpuCount: 8, smUtilPercent: 70, memUtilPercent: 30, hoursPerDay: 2, daysPerYear: 1 } as const
 
 function Probe() {
   const { result, setResult, clear } = useAnalysis()
