@@ -1,5 +1,6 @@
 import { runAnalysis } from '../services/analysis'
 import type { AnalysisResult, PredictionInput } from '../types/analysis'
+import { mockBackend } from './mockBackend'
 
 export const sampleInput: PredictionInput = {
   gpuCount: 64,
@@ -10,5 +11,5 @@ export const sampleInput: PredictionInput = {
 }
 
 export function makeResult(input: PredictionInput = sampleInput): Promise<AnalysisResult> {
-  return runAnalysis(input)
+  return runAnalysis(input, { backend: mockBackend })
 }

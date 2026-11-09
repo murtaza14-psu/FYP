@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { runAnalysis } from '../services/analysis'
+import { mockBackend } from '../test/mockBackend'
 import { useAnalysis } from './analysisContext'
 import AnalysisProvider from './AnalysisProvider'
 import { STORAGE_KEY } from './storage'
@@ -13,7 +14,7 @@ function Probe() {
   return (
     <div>
       <p data-testid="gpus">{result ? result.input.gpuCount : 'none'}</p>
-      <button onClick={async () => setResult(await runAnalysis(INPUT))}>store</button>
+      <button onClick={async () => setResult(await runAnalysis(INPUT, { backend: mockBackend }))}>store</button>
       <button onClick={clear}>clear</button>
     </div>
   )
@@ -41,14 +42,14 @@ describe('AnalysisProvider', () => {
   })
 
   it('restores a stored result on mount', async () => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(await runAnalysis(INPUT)))
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(await runAnalysis(INPUT, { backend: mockBackend })))
     renderProbe()
     expect(screen.getByTestId('gpus')).toHaveTextContent('8')
   })
 
   it('clear() removes the result from state and storage', async () => {
     const user = userEvent.setup()
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(await runAnalysis(INPUT)))
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(await runAnalysis(INPUT, { backend: mockBackend })))
     renderProbe()
     await user.click(screen.getByText('clear'))
     expect(screen.getByTestId('gpus')).toHaveTextContent('none')
@@ -65,5 +66,27 @@ describe('AnalysisProvider', () => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ hello: 'world' }))
     renderProbe()
     expect(screen.getByTestId('gpus')).toHaveTextContent('none')
+  })
+
+  it('ignores results saved by an older version of the app (old key, placeholder cooling model)', async () => {
+    const oldFormat = { ...(await runAnalysis(INPUT, { backend: mockBackend })), cooling: undefined }
+    sessionStorage.setItem('gpu-cooling-advisor:analysis', JSON.stringify(oldFormat))
+    renderProbe()
+    expect(screen.getByTestId('gpus')).toHaveTextContent('none')
+  })
+
+  it('ignores a stored result whose cooling data is missing or incomplete', async () => {
+    const full = await runAnalysis(INPUT, { backend: mockBackend })
+    for (const broken of [
+      { ...full, cooling: undefined },
+      { ...full, estimates: [] },
+      { ...full, estimates: [{ ...full.estimates[0], monthly: [] }] },
+      { ...full, estimates: [{ ...full.estimates[0], techniqueId: 'immersion' }] },
+    ]) {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(broken))
+      const { unmount } = renderProbe()
+      expect(screen.getByTestId('gpus')).toHaveTextContent('none')
+      unmount()
+    }
   })
 })

@@ -1,30 +1,21 @@
 import type { CoolingTechnique } from '../types/analysis'
 
 /**
- * PLACEHOLDER coefficients — illustrative values only.
- * Module 2 (physics model) will replace these with region- and load-dependent equations.
+ * The two techniques modelled in Module 2 (equations in `docs/Cooling_Equations_Summary.pdf`, implemented in
+ * `cooling_module/`). Their electricity and water figures come from the prediction service, not from this file.
+ * Immersion cooling has no equations yet and is not modelled.
  */
 export const COOLING_TECHNIQUES: readonly CoolingTechnique[] = [
   {
     id: 'air',
     name: 'Air cooling',
-    shortDescription: 'Chilled air circulated through server racks by CRAH units and chillers.',
-    energyFactor: 0.35,
-    waterFactor: 1.8,
+    shortDescription: 'Chilled air circulated through the server racks, cooled by chillers and cooling towers.',
   },
   {
     id: 'direct-to-chip',
     name: 'Direct-to-chip cooling',
-    shortDescription: 'Cold plates on each GPU carry heat away in a warm-water liquid loop.',
-    energyFactor: 0.15,
-    waterFactor: 0.6,
-  },
-  {
-    id: 'immersion',
-    name: 'Immersion cooling',
-    shortDescription: 'Servers submerged in dielectric fluid that absorbs heat directly.',
-    energyFactor: 0.05,
-    waterFactor: 0.1,
+    shortDescription:
+      'Cold plates on each GPU carry most of the heat away in a liquid loop; dry coolers do the work whenever the weather allows.',
   },
 ]
 

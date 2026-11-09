@@ -1,31 +1,28 @@
 import { ASHBURN } from '../data/regions'
 import type { AnalysisResult, PredictionInput, RankingCriterion } from '../types/analysis'
-import { estimateCooling, totalHeatEnergy } from './coolingModel'
-import { mockHeatPredictor, type HeatPredictor } from './heatPrediction'
+import type { AnalysisBackend } from './analysisClient'
 import { rankTechniques } from './ranking'
-import { operatingHoursPerYear } from '../lib/validation'
 
 export interface AnalysisOptions {
-  predictor?: HeatPredictor
+  /** Where heat and cooling come from: the Python service in the app, a test double in tests. */
+  backend: AnalysisBackend
   criterion?: RankingCriterion
 }
 
-/** Runs the full pipeline (annual figures: heat energy is over a year of operating hours): heat prediction → cooling estimates → ranking. */
+/** Runs the full pipeline for one year: heat prediction + cooling estimates (one backend call) → ranking. */
 export async function runAnalysis(
   input: PredictionInput,
-  { predictor = mockHeatPredictor, criterion = 'balanced' }: AnalysisOptions = {},
+  { backend, criterion = 'balanced' }: AnalysisOptions,
 ): Promise<AnalysisResult> {
-  const region = ASHBURN
-  const prediction = await predictor.predict(input)
-  const hours = operatingHoursPerYear(input)
-  const estimates = estimateCooling(prediction, hours, region)
+  const { prediction, heatEnergyKWh, estimates, cooling } = await backend.analyse(input)
 
   return {
     input,
-    region,
+    region: ASHBURN,
     prediction,
-    heatEnergyKWh: totalHeatEnergy(prediction, hours),
+    heatEnergyKWh,
     estimates,
+    cooling,
     ranking: rankTechniques(estimates, criterion),
     criterion,
     createdAt: new Date().toISOString(),

@@ -1,8 +1,8 @@
 # GPU Cooling Advisor
 
-Final Year Project: a web interface that predicts the annual heat a GPU fleet generates, estimates the water and electricity used by three cooling techniques (air, direct-to-chip, immersion), and ranks them.
+Final Year Project: a web interface that predicts the annual heat a GPU fleet generates, estimates the water and electricity used by two cooling techniques (air, direct-to-chip) in Ashburn, Virginia, and ranks them.
 
-> **Status:** the heat prediction is real (five-model ensemble served by `ml_module/api.py`). The physics equations and AHP/TOPSIS ranking are still **placeholders**.
+> **Status:** the heat prediction (five-model ensemble) and the cooling model (air and direct-to-chip, Ashburn weather) are real and served by `ml_module/api.py`. Only the AHP/TOPSIS **ranking** is still a placeholder. Immersion cooling is not modelled.
 
 ## Run it
 
@@ -36,20 +36,22 @@ The service URL defaults to `http://127.0.0.1:8000`; override it with `VITE_API_
 ## How it works
 
 ```
-PredictPage form ─► runAnalysis(input)
-                      ├─ heatPrediction   Module 1 (HTTP client for ml_module/api.py; mock kept for tests)
-                      ├─ coolingModel     Module 2 (placeholder per-kWh factors, Ashburn VA only)
-                      └─ ranking          Module 3 (placeholder: water / electricity / balanced)
+PredictPage form ─► runAnalysis(input, { backend })
+                      ├─ backend.analyse   Modules 1 + 2: ONE call to POST /api/v1/analysis of ml_module/api.py
+                      │                    (heat from the ML ensemble, then cooling from cooling_module/)
+                      └─ ranking           Module 3 (placeholder: water / electricity / balanced)
                     ─► AnalysisProvider (+ sessionStorage) ─► ResultsPage
 ```
 
 Pages: Home, About Us, How It Works, Predict, Results, FAQ, Contact (and a 404).
 
+The Results page shows, in order: annual heat, the cooling comparison (electricity and water with low to high ranges, water split into evaporation / blowdown / drift), a month-by-month chart, the Ashburn climate (collapsible), the ranking, and the assumptions and equations (collapsible). The service's response is checked strictly in `src/services/analysisClient.ts`; anything unexpected is rejected with a safe message.
+
 ## What is mocked, and where to replace it
 
 | Module | File | Replace with |
 |---|---|---|
-| 2. Cooling resources | `src/services/coolingModel.ts`, `src/data/coolingTechniques.ts` | Physics model using region climate/grid data |
+| Immersion cooling (not modelled) | `cooling_module/`, `src/data/coolingTechniques.ts` | Its equations, once available |
 | 3. Ranking | `src/services/ranking.ts` | AHP weights + TOPSIS |
 | Region | `src/data/regions.ts` | More regions and a region selector in the form |
 | Team, supervisor, email | `src/config/site.ts` | Real details (currently placeholders) |
@@ -62,10 +64,11 @@ src/config/            site name, navigation, team placeholders
 src/types/             domain types
 src/data/              techniques, region, FAQ
 src/lib/               formatting, validation, page-title hook
-src/services/          heat prediction, cooling model, ranking, analysis pipeline
+src/services/          service client + response parser, ranking, analysis pipeline
 src/state/             analysis context + sessionStorage persistence
 src/components/        layout, ui, predict form, results panels
 src/pages/             one file per route
+src/test/              test setup, fixtures and a test double of the service (mockBackend.ts)
 e2e/                   Playwright tests (paused)
 ```
 

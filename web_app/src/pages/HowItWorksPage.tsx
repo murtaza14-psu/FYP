@@ -14,7 +14,7 @@ const STEPS = [
   },
   {
     title: 'Estimate cooling resources',
-    body: 'Equations calculate the water and electricity that air, direct-to-chip and immersion cooling would use to remove that heat in Ashburn, Virginia.',
+    body: 'Equations calculate, hour by hour over a typical year of Ashburn weather, the water and electricity that air cooling and direct-to-chip cooling would use to remove that heat.',
   },
   {
     title: 'Compare and rank',
@@ -95,7 +95,7 @@ export default function HowItWorksPage() {
 
         <div className="flex flex-wrap items-center gap-4">
           <LinkButton to="/predict">Try it now</LinkButton>
-          <p className="text-ink-600">Prototype values are placeholders. See the FAQ for details.</p>
+          <p className="text-ink-600">Results are model estimates for one typical year in Ashburn. See the FAQ for details.</p>
         </div>
       </Container>
     </>

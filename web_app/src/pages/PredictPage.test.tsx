@@ -4,12 +4,10 @@ import { MemoryRouter } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './../App'
 import { STORAGE_KEY } from '../state/storage'
+import { buildMockBody } from '../test/mockBackend'
 
-const API_RESPONSE = {
-  heat_load_mw: { low: 0.04, expected: 0.06, high: 0.08 },
-  per_gpu: { expected_w: 122.8 },
-  warnings: ['GPU heat only.'],
-}
+// What the service returns for the form's default inputs (500 GPUs, 60 % SM, 30 % memory, 24 h x 365 days).
+const API_RESPONSE = buildMockBody({ gpuCount: 500, smUtilPercent: 60, memUtilPercent: 30, hoursPerDay: 24, daysPerYear: 365 })
 
 function renderPredict() {
   render(
@@ -32,7 +30,7 @@ describe('PredictPage', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: /^results$/i }, { timeout: 3000 })).toBeInTheDocument()
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit]
-    expect(url).toMatch(/\/api\/v1\/annual-heat$/)
+    expect(url).toMatch(/\/api\/v1\/analysis$/)
     expect(JSON.parse(init.body as string)).toEqual({
       n_gpus: 500,
       sm_util_pct: 60,
@@ -43,7 +41,22 @@ describe('PredictPage', () => {
     const stored = JSON.parse(sessionStorage.getItem(STORAGE_KEY)!)
     expect(stored.input).toEqual({ gpuCount: 500, smUtilPercent: 60, memUtilPercent: 30, hoursPerDay: 24, daysPerYear: 365 })
     expect(stored.prediction.isMock).toBe(false)
-    expect(stored.heatEnergyKWh.value).toBeCloseTo(0.06 * 1000 * 24 * 365)
+    expect(stored.heatEnergyKWh.value).toBeCloseTo(1.5 * 1000 * 24 * 365)
+    expect(stored.estimates.map((e: { techniqueId: string }) => e.techniqueId)).toEqual(['air', 'direct-to-chip'])
+    expect(stored.cooling.site.name).toBe('Ashburn, Virginia, USA')
+    expect(screen.getByRole('heading', { name: /cooling comparison/i })).toBeInTheDocument()
+  })
+
+  it('shows a message and stays on the page when the service answers with something unexpected', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ heat_load_mw: {} }), { status: 200 })))
+    const user = userEvent.setup()
+    renderPredict()
+
+    await user.click(screen.getByRole('button', { name: /run prediction/i }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/unexpected response/i)
+    expect(screen.getByRole('heading', { level: 1, name: /run a prediction/i })).toBeInTheDocument()
+    expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull()
   })
 
   it('shows a helpful message and stays on the page when the service is down', async () => {

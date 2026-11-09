@@ -1,4 +1,4 @@
-import type { CoolingEstimate, RankedTechnique, RankingCriterion } from '../types/analysis'
+import type { RankableEstimate, RankedTechnique, RankingCriterion } from '../types/analysis'
 
 /** Each resource use divided by the largest across techniques, so 1 = worst and values lie in (0, 1]. */
 function normalise(values: number[]): number[] {
@@ -12,7 +12,7 @@ function normalise(values: number[]): number[] {
  * Lower score is better; ties keep input order.
  */
 export function rankTechniques(
-  estimates: readonly CoolingEstimate[],
+  estimates: readonly RankableEstimate[],
   criterion: RankingCriterion,
 ): RankedTechnique[] {
   const water = normalise(estimates.map((e) => e.waterLitres.value))

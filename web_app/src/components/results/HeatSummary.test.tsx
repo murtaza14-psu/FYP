@@ -29,6 +29,7 @@ describe('HeatSummary', () => {
   })
 
   it('shows the heat load while running, and per-GPU power only when known', () => {
+    result = { ...result, prediction: { ...result.prediction, perGpuW: undefined } }
     renderSummary()
     expect(screen.getByText(formatPower(result.prediction.valueMW))).toBeInTheDocument()
     expect(screen.queryByText(/W per GPU/)).not.toBeInTheDocument()

@@ -34,9 +34,26 @@ describe('ResultsPage', () => {
     renderPage(result)
     expect(screen.getByRole('heading', { name: /^annual heat$/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /cooling comparison/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /month by month/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /ashburn climate/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^ranking$/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /assumptions and equations/i })).toBeInTheDocument()
     expect(screen.queryByText(/no results yet/i)).not.toBeInTheDocument()
+  })
+
+  it('lists the sections in reading order: heat, cooling, months, climate, ranking, assumptions', () => {
+    renderPage(result)
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent ?? '')
+    const at = (re: RegExp) => headings.findIndex((t) => re.test(t))
+    const order = [/^annual heat$/i, /cooling comparison/i, /month by month/i, /ashburn climate/i, /^ranking$/i, /assumptions/i].map(at)
+    expect(order.every((i) => i >= 0)).toBe(true)
+    expect([...order].sort((a, b) => a - b)).toEqual(order)
+  })
+
+  it('compares exactly the two modelled techniques', () => {
+    renderPage(result)
+    expect(screen.queryByText(/immersion cooling$/i)).not.toBeInTheDocument()
+    expect(screen.getAllByRole('row', { name: /air cooling/i }).length).toBeGreaterThan(0)
   })
 
   it('names the recommended technique', () => {

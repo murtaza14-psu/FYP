@@ -7,7 +7,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'What does this tool do?',
     answer:
-      'You describe a GPU fleet (number of GPUs, SM and memory utilisation, hours per day and days per year). The tool predicts the heat it gives off in a year, estimates the water and electricity that air, direct-to-chip and immersion cooling would use to remove that heat, and ranks the options by what matters most to you.',
+      'You describe a GPU fleet (number of GPUs, SM and memory utilisation, hours per day and days per year). The tool predicts the heat it gives off in a year, estimates the water and electricity that air cooling and direct-to-chip cooling would use to remove that heat in Ashburn, Virginia, and ranks the two options by what matters most to you.',
   },
   {
     question: 'Where does the heat prediction come from?',
@@ -22,12 +22,12 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'How are water and electricity calculated?',
     answer:
-      'For now each technique uses a simple placeholder factor per kilowatt-hour of heat removed. The final system will replace these with physics-based equations that account for the local climate and cooling-system design.',
+      'Hour by hour over a typical year of Ashburn weather (Washington Dulles airport, 2011 to 2025), using the equations in the project’s Cooling Equations Summary. Air cooling adds up the air-handler fans, chillers, pumps and cooling-tower fans, plus the water the towers evaporate. Direct-to-chip cooling adds up the coolant and building-water pumps, the dry coolers, a small chiller and tower used only in hot weather, and the small air system that removes the heat the cold plates miss. Water is evaporation plus drift plus blowdown (4 cycles of concentration are assumed). The results are shown as a typical value with a low to high range.',
   },
   {
-    question: 'What is the difference between the three cooling techniques?',
+    question: 'What is the difference between the two cooling techniques?',
     answer:
-      'Air cooling moves chilled air through the racks. Direct-to-chip cooling circulates liquid through cold plates attached to each GPU. Immersion cooling submerges servers in a dielectric fluid. Liquid-based approaches generally remove heat more efficiently, but cost and complexity differ.',
+      'Air cooling moves chilled air through the racks and rejects the heat in cooling towers. Direct-to-chip cooling circulates liquid through cold plates attached to each GPU and rejects most of the heat through dry coolers, which use no water. Immersion cooling, which submerges servers in a dielectric fluid, is not modelled yet.',
   },
   {
     question: 'How does the ranking work?',
@@ -37,7 +37,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Are the results accurate?',
     answer:
-      'The heat prediction was tested on GPU users the models had never seen (R² about 0.92, average error about 8 W per GPU) but it covers GPU power only and was trained on V100 data. The cooling figures are still placeholders, so do not use them for engineering or purchasing decisions.',
+      'The heat prediction was tested on GPU users the models had never seen (R² about 0.92, average error about 8 W per GPU) but it covers GPU power only and was trained on V100 data. The cooling model follows the project’s equations for one typical weather year in Ashburn and cools GPU heat only (not CPUs, networking or storage), so treat the results as estimates and not as engineering or purchasing advice.',
   },
   {
     question: 'Do I need an account, and is my data stored?',

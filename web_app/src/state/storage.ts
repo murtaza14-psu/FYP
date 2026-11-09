@@ -1,9 +1,27 @@
 import type { AnalysisResult } from '../types/analysis'
 
-export const STORAGE_KEY = 'gpu-cooling-advisor:analysis'
+/** Bumped when the stored shape changes, so results saved by an older version are never read (v2: real cooling model). */
+export const STORAGE_KEY = 'gpu-cooling-advisor:analysis:v2'
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
+}
+
+const isTechniqueId = (id: unknown) => id === 'air' || id === 'direct-to-chip'
+
+function isEstimate(value: unknown): boolean {
+  return (
+    isObject(value) &&
+    isTechniqueId(value.techniqueId) &&
+    isObject(value.electricityKWh) &&
+    isObject(value.waterLitres) &&
+    isObject(value.waterBreakdown) &&
+    Array.isArray(value.electricityItems) &&
+    Array.isArray(value.monthly) &&
+    value.monthly.length === 12 &&
+    typeof value.kWhPerKWhHeat === 'number' &&
+    Array.isArray(value.notes)
+  )
 }
 
 /** Light structural check so stale or tampered storage can't crash the Results page. */
@@ -16,6 +34,13 @@ export function isAnalysisResult(value: unknown): value is AnalysisResult {
     isObject(value.prediction) &&
     isObject(value.heatEnergyKWh) &&
     Array.isArray(value.estimates) &&
+    value.estimates.length > 0 &&
+    value.estimates.every(isEstimate) &&
+    isObject(value.cooling) &&
+    isObject(value.cooling.site) &&
+    Array.isArray(value.cooling.site.monthlyClimate) &&
+    isObject(value.cooling.assumptions) &&
+    isObject(value.cooling.parameters) &&
     Array.isArray(value.ranking) &&
     typeof value.criterion === 'string' &&
     typeof value.createdAt === 'string'

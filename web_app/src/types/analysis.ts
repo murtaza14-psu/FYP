@@ -33,16 +33,13 @@ export interface HeatPrediction {
   isMock: boolean
 }
 
-export type CoolingTechniqueId = 'air' | 'direct-to-chip' | 'immersion'
+/** The two techniques modelled in Module 2. Immersion cooling is not modelled yet. */
+export type CoolingTechniqueId = 'air' | 'direct-to-chip'
 
 export interface CoolingTechnique {
   id: CoolingTechniqueId
   name: string
   shortDescription: string
-  /** kWh of electricity used per kWh of heat removed (placeholder). */
-  energyFactor: number
-  /** Litres of water used per kWh of heat removed (placeholder). */
-  waterFactor: number
 }
 
 export interface Region {
@@ -52,18 +49,105 @@ export interface Region {
   climateNote: string
 }
 
+/** A result with its low–high range: `value` is the typical (headline) case. */
 export interface Range {
   low: number
   value: number
   high: number
 }
 
+/** Water used by the cooling towers, litres (1 kg of water = 1 litre). */
+export interface WaterBreakdown {
+  evaporation: number
+  drift: number
+  blowdown: number
+}
+
+/** One line of a breakdown, in the order the service reports it. */
+export interface UseItem {
+  label: string
+  value: number
+}
+
+export interface MonthlyUse {
+  /** 1–12 */
+  month: number
+  electricityKWh: number
+  waterLitres: number
+}
+
+/** Direct-to-chip only: share of the liquid heat removed by each stage (sums to 1). */
+export interface HeatSplit {
+  dryCooler: number
+  tower: number
+  chiller: number
+}
+
 export interface CoolingEstimate {
   techniqueId: CoolingTechniqueId
-  /** Electricity used by the cooling system, kWh. */
+  /** Electricity used by the cooling system over a year, kWh. */
   electricityKWh: Range
-  /** Water consumed by the cooling system, litres. */
+  /** Water consumed by the cooling system over a year (evaporation + drift + blowdown), litres. */
   waterLitres: Range
+  /** Typical case only. */
+  waterBreakdown: WaterBreakdown
+  /** Typical case only, kWh. */
+  electricityItems: UseItem[]
+  /** Typical case only, 12 months. */
+  monthly: MonthlyUse[]
+  /** Cooling electricity per kWh of GPU heat (typical case). */
+  kWhPerKWhHeat: number
+  /** Cooling water per kWh of GPU heat (typical case). */
+  litresPerKWhHeat: number
+  /** Hours of the year the chiller runs at all. */
+  chillerHours: number
+  heatSplit?: HeatSplit
+  /** Direct-to-chip: hours of the year the liquid side needs no cooling-tower water. */
+  hoursWithoutLiquidWater?: number
+  notes: string[]
+}
+
+/** What the ranking needs from an estimate. */
+export type RankableEstimate = Pick<CoolingEstimate, 'techniqueId' | 'electricityKWh' | 'waterLitres'>
+
+export interface ClimateMonth {
+  month: number
+  meanDryBulbC: number
+  meanWetBulbC: number
+  meanRelHumidityPct: number
+  minDryBulbC: number
+  maxDryBulbC: number
+}
+
+export interface CoolingSite {
+  name: string
+  weatherStation: string
+  weatherSource: string
+  periodOfRecord: string
+  sourceUrl: string
+  monthlyClimate: ClimateMonth[]
+}
+
+/** One parameter in its three scenarios (the equation document's three values: high use / typical / low use). */
+export interface ParameterRow {
+  label: string
+  unit: string
+  highUse: number
+  typical: number
+  lowUse: number
+}
+
+export interface CoolingContext {
+  site: CoolingSite
+  assumptions: {
+    heatBasis: string
+    loadProfile: string
+    cyclesOfConcentration: number
+    driftPercent: number
+    upsEfficiency: number
+    range: string
+  }
+  parameters: { air: ParameterRow[]; directToChip: ParameterRow[] }
 }
 
 export type RankingCriterion = 'water' | 'electricity' | 'balanced'
@@ -79,9 +163,10 @@ export interface AnalysisResult {
   input: PredictionInput
   region: Region
   prediction: HeatPrediction
-  /** Total heat energy over the job, kWh. */
+  /** Heat energy over a year, kWh. */
   heatEnergyKWh: Range
   estimates: CoolingEstimate[]
+  cooling: CoolingContext
   ranking: RankedTechnique[]
   criterion: RankingCriterion
   createdAt: string

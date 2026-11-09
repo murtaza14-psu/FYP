@@ -1,51 +1,43 @@
 import { describe, expect, it } from 'vitest'
-import type { CoolingEstimate } from '../types/analysis'
+import type { RankableEstimate } from '../types/analysis'
 import { rankTechniques } from './ranking'
 
 const range = (value: number) => ({ low: value * 0.9, value, high: value * 1.1 })
 
-// air: heavy on water & electricity; immersion: light on both; d2c: in between.
-const estimates: CoolingEstimate[] = [
+// air: heavy on water & electricity; direct-to-chip: lighter on both.
+const estimates: RankableEstimate[] = [
   { techniqueId: 'air', electricityKWh: range(500), waterLitres: range(2000) },
   { techniqueId: 'direct-to-chip', electricityKWh: range(200), waterLitres: range(700) },
-  { techniqueId: 'immersion', electricityKWh: range(100), waterLitres: range(100) },
 ]
 
 describe('rankTechniques', () => {
   it('ranks lowest water use first for the water criterion', () => {
-    expect(rankTechniques(estimates, 'water').map((r) => r.techniqueId)).toEqual([
-      'immersion',
-      'direct-to-chip',
-      'air',
-    ])
+    expect(rankTechniques(estimates, 'water').map((r) => r.techniqueId)).toEqual(['direct-to-chip', 'air'])
   })
 
   it('ranks lowest electricity first for the electricity criterion', () => {
-    // Make electricity order differ from water order.
-    const custom: CoolingEstimate[] = [
+    // Make the electricity order differ from the water order.
+    const custom: RankableEstimate[] = [
       { techniqueId: 'air', electricityKWh: range(50), waterLitres: range(2000) },
       { techniqueId: 'direct-to-chip', electricityKWh: range(200), waterLitres: range(700) },
-      { techniqueId: 'immersion', electricityKWh: range(100), waterLitres: range(100) },
     ]
-    expect(rankTechniques(custom, 'electricity').map((r) => r.techniqueId)).toEqual([
-      'air',
-      'immersion',
-      'direct-to-chip',
-    ])
+    expect(rankTechniques(custom, 'electricity').map((r) => r.techniqueId)).toEqual(['air', 'direct-to-chip'])
+    expect(rankTechniques(custom, 'water').map((r) => r.techniqueId)).toEqual(['direct-to-chip', 'air'])
   })
 
   it('ranks by an equal-weight normalised score for the balanced criterion', () => {
     const ranked = rankTechniques(estimates, 'balanced')
-    expect(ranked.map((r) => r.techniqueId)).toEqual(['immersion', 'direct-to-chip', 'air'])
-    expect(ranked[0].score).toBeLessThan(ranked[2].score)
+    expect(ranked.map((r) => r.techniqueId)).toEqual(['direct-to-chip', 'air'])
+    expect(ranked[0].score).toBeLessThan(ranked[1].score)
+    expect(ranked[1].score).toBeCloseTo(1)
   })
 
   it('numbers ranks 1..n with no gaps', () => {
-    expect(rankTechniques(estimates, 'balanced').map((r) => r.rank)).toEqual([1, 2, 3])
+    expect(rankTechniques(estimates, 'balanced').map((r) => r.rank)).toEqual([1, 2])
   })
 
   it('keeps input order for ties', () => {
-    const tied: CoolingEstimate[] = [
+    const tied: RankableEstimate[] = [
       { techniqueId: 'air', electricityKWh: range(100), waterLitres: range(100) },
       { techniqueId: 'direct-to-chip', electricityKWh: range(100), waterLitres: range(100) },
     ]

@@ -16,12 +16,13 @@ describe('Footer', () => {
     expect(footer).toHaveTextContent(SITE.name)
   })
 
-  it('states that this is a prototype using placeholder values', () => {
+  it('states that this is a prototype and not engineering advice', () => {
     render(
       <MemoryRouter>
         <Footer />
       </MemoryRouter>,
     )
     expect(screen.getByRole('contentinfo')).toHaveTextContent(/prototype/i)
+    expect(screen.getByRole('contentinfo')).toHaveTextContent(/not engineering advice/i)
   })
 })

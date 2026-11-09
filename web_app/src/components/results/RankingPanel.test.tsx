@@ -1,16 +1,15 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import type { CoolingEstimate } from '../../types/analysis'
+import type { RankableEstimate } from '../../types/analysis'
 import RankingPanel from './RankingPanel'
 
 const range = (value: number) => ({ low: value * 0.9, value, high: value * 1.1 })
 
-// Orders differ by criterion: water favours immersion, electricity favours air.
-const estimates: CoolingEstimate[] = [
+// Orders differ by criterion: water favours direct-to-chip, electricity favours air.
+const estimates: RankableEstimate[] = [
   { techniqueId: 'air', electricityKWh: range(50), waterLitres: range(2000) },
   { techniqueId: 'direct-to-chip', electricityKWh: range(200), waterLitres: range(700) },
-  { techniqueId: 'immersion', electricityKWh: range(100), waterLitres: range(100) },
 ]
 
 const names = () =>
@@ -31,10 +30,10 @@ describe('RankingPanel', () => {
     render(<RankingPanel estimates={estimates} />)
 
     await user.click(screen.getByRole('radio', { name: 'Water' }))
-    expect(names()).toEqual(['Immersion cooling', 'Direct-to-chip cooling', 'Air cooling'])
+    expect(names()).toEqual(['Direct-to-chip cooling', 'Air cooling'])
 
     await user.click(screen.getByRole('radio', { name: 'Electricity' }))
-    expect(names()).toEqual(['Air cooling', 'Immersion cooling', 'Direct-to-chip cooling'])
+    expect(names()).toEqual(['Air cooling', 'Direct-to-chip cooling'])
   })
 
   it('marks only the first-ranked technique as recommended', async () => {
@@ -43,8 +42,8 @@ describe('RankingPanel', () => {
     await user.click(screen.getByRole('radio', { name: 'Electricity' }))
     const items = within(screen.getByRole('list', { name: /ranking/i })).getAllByRole('listitem')
     expect(items[0]).toHaveTextContent(/recommended/i)
+    expect(items).toHaveLength(2)
     expect(items[1]).not.toHaveTextContent(/recommended/i)
-    expect(items[2]).not.toHaveTextContent(/recommended/i)
   })
 
   it('starts on the given criterion', () => {

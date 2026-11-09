@@ -1,6 +1,6 @@
 # GPU Cooling Advisor (FYP)
 
-Final Year Project: predict the heat a GPU data centre gives off in a year, estimate the water and electricity used by three cooling techniques (air, direct-to-chip, immersion), and rank them.
+Final Year Project: predict the heat a GPU data centre gives off in a year, estimate the water and electricity two cooling techniques (air, direct-to-chip) use in Ashburn, Virginia, and rank them.
 
 ## Repository layout
 
@@ -8,6 +8,7 @@ Final Year Project: predict the heat a GPU data centre gives off in a year, esti
 |---|---|
 | `web_app/` | The website (React + TypeScript). See `web_app/README.md`. |
 | `ml_module/` | The machine-learning models, the prediction service and the dataset (`ml_module/data/`). See `ml_module/README.md`. |
+| `cooling_module/` | The cooling model: electricity and water for air and direct-to-chip cooling, hour by hour for a typical year in Ashburn. Used by the prediction service. See `cooling_module/README.md`. |
 | `docs/` | Reference material, e.g. `Cooling_Equations_Summary.pdf`. |
 
 ## Run it in the browser: step by step
@@ -23,7 +24,7 @@ You need two programs open at once: the **prediction service** (Python, does the
 7. **Start the website.** Run `npm run dev` and leave it running; it prints the address `http://localhost:5173`.
 8. **Open the website.** Go to `http://localhost:5173` in your browser and click **Predict**.
 9. **Enter your data centre.** Fill in the number of GPUs, average SM (compute) utilisation %, average memory utilisation %, hours per day and days per year in use, then click **Run prediction**.
-10. **Read the result.** The Results page shows the heat produced per year with its likely range, followed by the cooling comparison and ranking (the cooling numbers are still placeholders).
+10. **Read the result.** The Results page shows the heat produced per year with its likely range, then the electricity and water each cooling technique needs (with a low to high range), a month-by-month chart, the Ashburn climate, and the ranking (the ranking is still a simple placeholder; AHP and TOPSIS are not built yet).
 11. **Stop everything.** Press `Ctrl + C` in both terminals when you are finished.
 
 Next time, skip steps 1–4 and 6: just do step 5, then step 7 (inside `web_app`), then open the browser.

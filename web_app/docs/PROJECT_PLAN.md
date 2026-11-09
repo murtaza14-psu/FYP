@@ -1,5 +1,7 @@
 # GPU Cooling Advisor — Front-End Project Plan (MVP)
 
+> **Update 2026-11-07:** Module 1 (ML heat prediction) and Module 2 (cooling model for air and direct-to-chip, Ashburn weather) are now real and served by `ml_module/api.py`; see `ml_module/README.md` and `cooling_module/PLAN.md`. Only the ranking is still a placeholder. The sections below describe the original mocked MVP and are kept as history.
+>
 > **Working name:** GPU Cooling Advisor (rename in one place: `src/config/site.ts`)
 > **Scope of this plan:** the web front end (MVP). ML model, physics engine and ranking algorithms are **mocked/placeholder** for now.
 > **Development style:** Test-Driven Development (red → green → refactor). Every step below lists its tests *before* its implementation.
@@ -268,8 +270,9 @@ These are illustrative values within commonly reported ranges and **must be repl
 ---
 
 ## 8. Future work (after MVP)
-- [ ] Module 1: train the model on MIT SuperCloud; serve via FastAPI; replace `mockHeatPredictor` with an HTTP client
-- [ ] Module 2: real thermodynamic models (wet-bulb-dependent water use, COP curves); more regions (Pakistan cities, etc.); data scraping
+- [x] Module 1: train the model on MIT SuperCloud; serve via FastAPI; replace `mockHeatPredictor` with an HTTP client (done; superseded by one `analysisClient` for Modules 1 and 2)
+- [x] Module 2: real thermodynamic models for air and direct-to-chip cooling in Ashburn (wet-bulb-dependent water use, hourly weather) (done, `cooling_module/`)
+- [ ] Module 2: immersion cooling; more regions (Pakistan cities, etc.); data scraping
 - [ ] Module 3: decide criteria; implement AHP (pairwise comparison UI + consistency ratio) and TOPSIS
 - [ ] Export results (PDF), compare runs, deployment
 
@@ -284,3 +287,4 @@ These are illustrative values within commonly reported ranges and **must be repl
 | 2026-10-19 | 2.1 – 2.7 | Types, data, formatting, validation, mock predictor, cooling model, ranking, pipeline (62 tests) | uncommitted |
 | 2026-10-19 | 3.1 – 4.5 | Layout, routing, 404, Home, About, How It Works, FAQ, Contact (103 tests) | uncommitted |
 | 2026-10-19 | 5.1 – 6.5 | Prediction form, analysis state, Predict wiring, Results page (141 tests; `npm run check` green) | uncommitted |
+| 2026-11-07 | Module 2 | Cooling model (`cooling_module/`, 120 Python tests), `POST /api/v1/analysis`, website shows real electricity/water with ranges, month-by-month chart, climate and assumptions; immersion removed (191 web tests, `npm run check` green) | uncommitted |

@@ -2,7 +2,7 @@ import { useId, useMemo, useState } from 'react'
 import { getTechnique } from '../../data/coolingTechniques'
 import { formatEnergy, formatVolume } from '../../lib/format'
 import { rankTechniques } from '../../services/ranking'
-import type { CoolingEstimate, RankingCriterion } from '../../types/analysis'
+import type { RankableEstimate, RankingCriterion } from '../../types/analysis'
 
 const CRITERIA: { id: RankingCriterion; label: string; hint: string }[] = [
   { id: 'water', label: 'Water', hint: 'Least water consumed' },
@@ -11,7 +11,7 @@ const CRITERIA: { id: RankingCriterion; label: string; hint: string }[] = [
 ]
 
 interface RankingPanelProps {
-  estimates: readonly CoolingEstimate[]
+  estimates: readonly RankableEstimate[]
   initialCriterion?: RankingCriterion
 }
 

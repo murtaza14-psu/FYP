@@ -48,7 +48,7 @@ models disagree. Only GPU heat is counted (no CPUs, network, storage or cooling 
 | `run_all.py` | Runs everything in order |
 | `pipeline.py` | Data-centre inputs → five-model ensemble → annual heat with ranges and warnings (validated inputs) |
 | `estimate.py` | Command-line front end for the pipeline |
-| `api.py` | Local FastAPI service used by the web app (127.0.0.1 only, CORS limited to the Vite origins) |
+| `api.py` | Local FastAPI service used by the web app (127.0.0.1 only, CORS limited to the Vite origins). `POST /api/v1/analysis` returns the heat above plus the cooling electricity and water from `cooling_module/` |
 | `evaluate_ensemble.py` | Scores the ensemble on the held-out users, writes `artifacts/ensemble_metrics.json` |
 | `test_common.py`, `test_pipeline.py` | Tests for the heat arithmetic, band coverage, path safety, tamper detection, input validation, ensemble, API |
 

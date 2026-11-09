@@ -6,5 +6,5 @@ export const ASHBURN: Region = {
   name: 'Ashburn, Virginia, USA',
   country: 'United States',
   climateNote:
-    'Humid subtropical climate, home to the densest data-centre cluster in the world. Climate and grid data are not yet used by the placeholder model.',
+    'Humid subtropical climate, home to the densest data-centre cluster in the world. The cooling model uses a typical year of hourly weather (2011-2025) from Washington Dulles airport, about 10 km away.',
 }

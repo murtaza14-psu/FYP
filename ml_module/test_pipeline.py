@@ -159,6 +159,42 @@ class Api(unittest.TestCase):
             "Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
         self.assertIsNone(bad.headers.get("access-control-allow-origin"))
 
+    # ---- /api/v1/analysis: heat (module 1) + cooling (module 2) in one call
+    def test_analysis_returns_heat_and_cooling(self):
+        r = self.client.post("/api/v1/analysis", json=BASE)
+        self.assertEqual(r.status_code, 200)
+        body = r.json()
+        self.assertEqual(set(body), {"heat", "cooling"})
+        want = PIPE.estimate(DataCenter(**BASE))["annual_heat_mwh"]
+        self.assertAlmostEqual(body["heat"]["annual_heat_mwh"]["expected"], want["expected"], places=9)
+        for key in ("low", "expected", "high"):
+            self.assertAlmostEqual(body["cooling"]["heat_annual_kwh"][key], want[key] * 1000.0, places=6)
+        self.assertEqual([t["id"] for t in body["cooling"]["techniques"]], ["air", "direct-to-chip"])
+        self.assertEqual(body["cooling"]["site"]["name"], "Ashburn, Virginia, USA")
+
+    def test_analysis_more_gpus_means_more_cooling(self):
+        small = self.client.post("/api/v1/analysis", json={**BASE, "n_gpus": 100}).json()["cooling"]["techniques"][0]
+        large = self.client.post("/api/v1/analysis", json={**BASE, "n_gpus": 1000}).json()["cooling"]["techniques"][0]
+        self.assertGreater(large["water_litres"]["typical"], 5 * small["water_litres"]["typical"])
+
+    def test_analysis_validates_input_like_annual_heat(self):
+        for body in ({**BASE, "n_gpus": 0}, {**BASE, "mem_util_pct": -1}, {**BASE, "extra": 1}, {"n_gpus": 5}):
+            with self.subTest(body):
+                self.assertEqual(self.client.post("/api/v1/analysis", json=body).status_code, 422)
+        r = self.client.post("/api/v1/analysis", content=b"x" * 5000, headers={"content-type": "application/json"})
+        self.assertEqual(r.status_code, 413)
+
+    def test_analysis_cors_only_for_local_web_app(self):
+        ok = self.client.options("/api/v1/analysis", headers={
+            "Origin": "http://localhost:5173", "Access-Control-Request-Method": "POST"})
+        self.assertEqual(ok.headers.get("access-control-allow-origin"), "http://localhost:5173")
+        bad = self.client.options("/api/v1/analysis", headers={
+            "Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
+        self.assertIsNone(bad.headers.get("access-control-allow-origin"))
+
+    def test_health_reports_the_weather_site(self):
+        self.assertEqual(self.client.get("/health").json()["weather_site"], "Ashburn, Virginia, USA")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,8 @@
 import AssumptionsPanel from '../components/results/AssumptionsPanel'
 import CoolingComparison from '../components/results/CoolingComparison'
+import ClimatePanel from '../components/results/ClimatePanel'
 import HeatSummary from '../components/results/HeatSummary'
+import MonthlyBreakdown from '../components/results/MonthlyBreakdown'
 import RankingPanel from '../components/results/RankingPanel'
 import Container from '../components/ui/Container'
 import LinkButton from '../components/ui/LinkButton'
@@ -24,8 +26,10 @@ export default function ResultsPage() {
           <div className="space-y-8">
             <HeatSummary result={result} />
             <CoolingComparison estimates={result.estimates} />
+            <MonthlyBreakdown estimates={result.estimates} />
+            <ClimatePanel site={result.cooling.site} />
             <RankingPanel estimates={result.estimates} initialCriterion={result.criterion} />
-            <AssumptionsPanel />
+            <AssumptionsPanel cooling={result.cooling} />
           </div>
         ) : (
           <div className="mx-auto max-w-xl rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center">

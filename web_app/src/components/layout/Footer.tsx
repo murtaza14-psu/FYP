@@ -13,7 +13,7 @@ export default function Footer() {
         </div>
         <div className="max-w-md sm:text-right">
           <p>
-            Prototype: heat predictions and cooling figures use placeholder values and are not engineering advice.
+            Prototype: heat and cooling figures are model estimates for Ashburn, Virginia, and are not engineering advice.
           </p>
           <p className="mt-1">
             © {YEAR} {SITE.name}

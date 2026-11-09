@@ -1,0 +1,145 @@
+{
+  "site_name": "Ashburn, Virginia, USA",
+  "weather_station": "Dulles-Washington.Dulles.Intl.AP (WMO 724030)",
+  "station": {
+    "station_name": "Dulles-Washington.Dulles.Intl.AP",
+    "state": "VA",
+    "country": "USA",
+    "wmo_id": "724030",
+    "latitude": 38.9767,
+    "longitude": -77.4858,
+    "time_zone_hours": -5.0,
+    "elevation_m": 88.4
+  },
+  "station_note": "Washington Dulles International Airport, about 10 km from Ashburn (Loudoun County).",
+  "weather_source": "Climate.OneBuilding.Org, TMYx typical meteorological year",
+  "source_url": "https://climate.onebuilding.org/WMO_Region_4_North_and_Central_America/USA_United_States_of_America/VA_Virginia/USA_VA_Dulles-Washington.Dulles.Intl.AP.724030_TMYx.2011-2025.zip",
+  "source_file": "USA_VA_Dulles-Washington.Dulles.Intl.AP.724030_TMYx.2011-2025.epw",
+  "period_of_record": "2011-2025",
+  "retrieved": "2026-11-07",
+  "epw_sha256": "dc269996a7b25f5127f500d5a6018e7c25535b38847fabfe0f7251cc5bd67727",
+  "csv_file": "ashburn_va_hourly.csv",
+  "csv_sha256": "5d0e3587aef8b47c3cbd57b0869f57556f911caa3452106c09dd6cb4915c0b4b",
+  "rows": 8760,
+  "columns": [
+    "month",
+    "day",
+    "hour",
+    "dry_bulb_c",
+    "dew_point_c",
+    "rel_humidity_pct",
+    "pressure_kpa",
+    "wet_bulb_c"
+  ],
+  "wet_bulb_method": "ASHRAE Fundamentals ch. 1 (Hyland-Wexler saturation pressure, psychrometric equation), solved by bisection",
+  "monthly": [
+    {
+      "month": 1,
+      "hours": 744,
+      "mean_dry_bulb_c": 2.14,
+      "mean_wet_bulb_c": -0.31,
+      "mean_rel_humidity_pct": 63.6,
+      "min_dry_bulb_c": -6.7,
+      "max_dry_bulb_c": 13.3
+    },
+    {
+      "month": 2,
+      "hours": 672,
+      "mean_dry_bulb_c": 2.61,
+      "mean_wet_bulb_c": 0.09,
+      "mean_rel_humidity_pct": 61.8,
+      "min_dry_bulb_c": -13.9,
+      "max_dry_bulb_c": 19.4
+    },
+    {
+      "month": 3,
+      "hours": 744,
+      "mean_dry_bulb_c": 9.34,
+      "mean_wet_bulb_c": 5.41,
+      "mean_rel_humidity_pct": 56.5,
+      "min_dry_bulb_c": -7.2,
+      "max_dry_bulb_c": 25.0
+    },
+    {
+      "month": 4,
+      "hours": 720,
+      "mean_dry_bulb_c": 13.3,
+      "mean_wet_bulb_c": 8.74,
+      "mean_rel_humidity_pct": 57.0,
+      "min_dry_bulb_c": 2.2,
+      "max_dry_bulb_c": 26.1
+    },
+    {
+      "month": 5,
+      "hours": 744,
+      "mean_dry_bulb_c": 19.0,
+      "mean_wet_bulb_c": 15.03,
+      "mean_rel_humidity_pct": 68.7,
+      "min_dry_bulb_c": 4.4,
+      "max_dry_bulb_c": 33.9
+    },
+    {
+      "month": 6,
+      "hours": 720,
+      "mean_dry_bulb_c": 23.02,
+      "mean_wet_bulb_c": 17.66,
+      "mean_rel_humidity_pct": 61.3,
+      "min_dry_bulb_c": 8.3,
+      "max_dry_bulb_c": 35.0
+    },
+    {
+      "month": 7,
+      "hours": 744,
+      "mean_dry_bulb_c": 26.26,
+      "mean_wet_bulb_c": 20.97,
+      "mean_rel_humidity_pct": 65.4,
+      "min_dry_bulb_c": 16.1,
+      "max_dry_bulb_c": 37.2
+    },
+    {
+      "month": 8,
+      "hours": 744,
+      "mean_dry_bulb_c": 24.81,
+      "mean_wet_bulb_c": 21.81,
+      "mean_rel_humidity_pct": 79.3,
+      "min_dry_bulb_c": 12.8,
+      "max_dry_bulb_c": 34.4
+    },
+    {
+      "month": 9,
+      "hours": 720,
+      "mean_dry_bulb_c": 20.77,
+      "mean_wet_bulb_c": 16.76,
+      "mean_rel_humidity_pct": 69.2,
+      "min_dry_bulb_c": 8.3,
+      "max_dry_bulb_c": 31.1
+    },
+    {
+      "month": 10,
+      "hours": 744,
+      "mean_dry_bulb_c": 15.0,
+      "mean_wet_bulb_c": 12.6,
+      "mean_rel_humidity_pct": 77.0,
+      "min_dry_bulb_c": -0.6,
+      "max_dry_bulb_c": 30.6
+    },
+    {
+      "month": 11,
+      "hours": 720,
+      "mean_dry_bulb_c": 9.75,
+      "mean_wet_bulb_c": 6.47,
+      "mean_rel_humidity_pct": 63.1,
+      "min_dry_bulb_c": -7.2,
+      "max_dry_bulb_c": 26.7
+    },
+    {
+      "month": 12,
+      "hours": 744,
+      "mean_dry_bulb_c": 4.2,
+      "mean_wet_bulb_c": 2.37,
+      "mean_rel_humidity_pct": 74.1,
+      "min_dry_bulb_c": -7.2,
+      "max_dry_bulb_c": 18.9
+    }
+  ]
+}

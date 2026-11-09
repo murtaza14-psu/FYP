@@ -41,7 +41,7 @@ export default function HomePage() {
             Choose the right cooling for your GPU workload
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-ink-200 sm:text-xl">
-            {SITE.tagline} Compare air, direct-to-chip and immersion cooling for the heat your GPUs will produce.
+            {SITE.tagline} Compare air and direct-to-chip cooling for the heat your GPUs will produce.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <LinkButton to="/predict">Start a prediction</LinkButton>
@@ -50,7 +50,7 @@ export default function HomePage() {
             </LinkButton>
           </div>
           <ul className="mt-12 flex flex-wrap gap-2 text-sm text-ink-200">
-            {['Ashburn, Virginia region', 'Water & electricity', '3 cooling techniques'].map((chip) => (
+            {['Ashburn, Virginia region', 'Water & electricity', '2 cooling techniques'].map((chip) => (
               <li key={chip} className="rounded-full border border-white/15 bg-white/5 px-3 py-1">
                 {chip}
               </li>
@@ -84,8 +84,8 @@ export default function HomePage() {
 
       <section className="bg-white py-16 sm:py-20">
         <Container>
-          <h2 className="text-2xl font-bold sm:text-3xl">Three cooling techniques compared</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <h2 className="text-2xl font-bold sm:text-3xl">Two cooling techniques compared</h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
             {COOLING_TECHNIQUES.map((t) => (
               <article key={t.id} className="rounded-2xl border border-ink-200 bg-ink-50 p-6">
                 <h3 className="text-xl font-semibold">{t.name}</h3>
